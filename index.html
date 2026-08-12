@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>@RECOLABS</title>
+    <meta name="title" content="@RECOLABS | Next-Gen Library Ecosystem" />
+    <meta name="description" content="A minimal, modern library management system with QR code integration. RECO ECOSYSTEM streamlines book issuing, returning, and tracking for schools and institutions." />
+    <meta name="keywords" content="library management system, QR code library, student library software, RECO LAB, RECO ECOSYSTEM, book tracking, school software" />
+    <meta name="author" content="RECO LABS" />
+    <!-- Dynamic Theme Color -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#050505" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://recolabs.system/" />
+    <meta property="og:title" content="@RECOLABS" />
+    <meta property="og:description" content="Streamlined library management with QR integration. Issue, return, and track resources in real-time." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=1200&auto=format&fit=crop" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://recolabs.system/" />
+    <meta property="twitter:title" content="@RECOLABS" />
+    <meta property="twitter:description" content="Streamlined library management with QR integration. Issue, return, and track resources in real-time." />
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=1200&auto=format&fit=crop" />
+
+    <!-- Favicon (Abstract Geometric Design) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236366f1;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23c084fc;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='50' fill='%2309090b'/%3E%3Cpath d='M30 30 H55 C65 30 70 35 70 45 C70 55 65 60 55 60 H45 V75 H30 V30 Z M45 48 H55 C58 48 60 46 60 45 C60 44 58 42 55 42 H45 V48 Z' fill='url(%23grad)'/%3E%3Crect x='65' y='65' width='12' height='12' rx='3' fill='%2310b981'/%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236366f1;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23c084fc;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='50' fill='%2309090b'/%3E%3Cpath d='M30 30 H55 C65 30 70 35 70 45 C70 55 65 60 55 60 H45 V75 H30 V30 Z M45 48 H55 C58 48 60 46 60 45 C60 44 58 42 55 42 H45 V48 Z' fill='url(%23grad)'/%3E%3Crect x='65' y='65' width='12' height='12' rx='3' fill='%2310b981'/%3E%3C/svg%3E" />
+
+    <!-- JSON-LD Structured Data for Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "RECO LAB",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "A modern library management system ensuring efficient book tracking via QR codes."
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'media', // Uses system preference
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Outfit', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+              background: "var(--background)",
+              foreground: "var(--foreground)",
+              primary: "var(--primary)",
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Add Tailwind Animate Plugin for smooth UI transitions -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+      
+      @media (prefers-color-scheme: light) {
+        body {
+          background-color: #f8fafc;
+          color: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #050505;
+          color: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #475569;
+        }
+      }
+
+      body {
+        font-family: 'Outfit', sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+      }
+      
+      /* Animation Utilities (Polyfill for tailwindcss-animate in browser CDN) */
+      @keyframes enter {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      .animate-in {
+        animation-fill-mode: forwards;
+        animation-duration: 0.5s;
+        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .fade-in {
+        animation-name: fadeIn;
+      }
+      .zoom-in-95 {
+        animation-name: enter;
+      }
+      .slide-in-from-bottom-2 {
+        animation-name: slideIn;
+      }
+      .slide-in-from-bottom-4 {
+        animation-name: slideIn;
+      }
+      .slide-in-from-bottom-8 {
+        animation-name: slideIn;
+      }
+    </style>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>

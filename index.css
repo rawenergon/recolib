@@ -1,0 +1,41 @@
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  animation: gradient 4s ease infinite;
+}
+
+@keyframes enter {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-in {
+  animation-fill-mode: forwards;
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-in { animation-name: fadeIn; }
+.zoom-in-95 { animation-name: enter; }
+.slide-in-from-bottom-2,
+.slide-in-from-bottom-4,
+.slide-in-from-bottom-8 { animation-name: slideIn; }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 120, 140, 0.4) transparent;
+}

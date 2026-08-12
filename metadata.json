@@ -1,0 +1,8 @@
+{
+  "name": "Remix: RECO LAB FINAL",
+  "description": "A minimal, modern library management system with QR code integration for students and admins.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": []
+}
