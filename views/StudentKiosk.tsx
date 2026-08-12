@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getBookByCode, getStudentById, createStudent, issueBook, returnBook } from '../services/dbService';
+import { supabase } from '../services/supabaseClient';
 import { Book } from '../types';
 import Scanner from '../components/Scanner';
 import { Icons } from '../components/Icons';
@@ -24,12 +25,67 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
   
   // Input for manual code
   const [manualCode, setManualCode] = useState('');
+  // Live validation: 'idle' | 'valid' | 'invalid'
+  const [codeStatus, setCodeStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
+  // Librarian (admin) presence gate for issuing
+  const [isLibrarian, setIsLibrarian] = useState(false);
+
+  // Watch admin auth session — issuing is only allowed while a librarian is signed in on this device
+  useEffect(() => {
+    let active = true;
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (active) setIsLibrarian(!!session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLibrarian(!!session);
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // Debounced live code validation for the manual-entry button
+  useEffect(() => {
+    const code = manualCode.trim();
+
+    if (code.length !== 4 || mode === 'auth' || mode === 'result' || mode === 'processing') {
+      setCodeStatus('idle');
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const book = await getBookByCode(code);
+        if (!book) {
+          setCodeStatus('invalid');
+          return;
+        }
+        const usable =
+          mode === 'issue_flow' ? book.status === 'AVAILABLE'
+          : mode === 'return_flow' ? book.status === 'ISSUED'
+          : false;
+        setCodeStatus(usable ? 'valid' : 'invalid');
+      } catch {
+        setCodeStatus('invalid');
+      }
+    }, 400);
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [manualCode, mode]);
 
   // --- Logic ---
 
   const handleFlowSelection = (flow: 'issue' | 'return') => {
     setMode(flow === 'issue' ? 'issue_flow' : 'return_flow');
     setManualCode('');
+    setCodeStatus('idle');
     setScannedBook(null);
   };
 
@@ -57,7 +113,10 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
       setScannedBook(book);
       
       if (mode === 'issue_flow') {
-          if (book.status === 'ISSUED') {
+          if (!isLibrarian) {
+             setMode('result');
+             setMessage({ title: 'LIBRARIAN REQUIRED', text: 'Issuing is only permitted in front of the librarian. Please ask library staff to sign in on this device first.', type: 'error' });
+          } else if (book.status === 'ISSUED') {
              setMode('result');
              setMessage({ title: 'UNAVAILABLE', text: `"${book.title}" is currently issued to another student.`, type: 'error' });
           } else {
@@ -101,6 +160,12 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
   const executeIssue = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!scannedBook) return;
+
+    if (!isLibrarian) {
+      setMode('result');
+      setMessage({ title: 'LIBRARIAN REQUIRED', text: 'Issuing is only permitted in front of the librarian. Please ask library staff to sign in on this device first.', type: 'error' });
+      return;
+    }
 
     setLoading(true);
     try {
@@ -157,6 +222,7 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
     setStudentDetails({ id: '', name: '', email: '', phone: '' });
     setIsExistingStudent(false);
     setManualCode('');
+    setCodeStatus('idle');
   };
 
   // --- Render Components ---
@@ -209,7 +275,9 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
                     </div>
                     <h2 className="text-3xl font-bold text-zinc-900 dark:text-white mb-2 tracking-tight">ISSUE RESOURCE</h2>
                     <p className="text-zinc-500 text-sm font-mono max-w-xs">Check out books, comics, or materials from the library.</p>
-                    <span className="mt-8 text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-500 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">Initiate Sequence &rarr;</span>
+                    <span className={`mt-8 text-[10px] font-bold uppercase tracking-[0.2em] transition-all translate-y-2 group-hover:translate-y-0 flex items-center gap-2 ${isLibrarian ? 'opacity-0 group-hover:opacity-100 text-indigo-600 dark:text-indigo-500' : 'opacity-100 group-hover:opacity-100 text-amber-600 dark:text-amber-500'}`}>
+                        {isLibrarian ? <><Icons.CheckCircle className="w-4 h-4" /> Librarian Present — Initiate &rarr;</> : <><Icons.AlertCircle className="w-4 h-4" /> Librarian Sign-in Required &rarr;</>}
+                    </span>
                  </button>
 
                  {/* RETURN CARD */}
@@ -242,6 +310,15 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
                      <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest">
                          {mode === 'issue_flow' ? 'Scan to check availability' : 'Scan to verify return'}
                      </p>
+                     {mode === 'issue_flow' && (
+                         <p className={`mt-3 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border ${
+                             isLibrarian
+                             ? 'text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10'
+                             : 'text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10'
+                         }`}>
+                             {isLibrarian ? <><Icons.CheckCircle className="w-3.5 h-3.5" /> Librarian Authorized</> : <><Icons.AlertCircle className="w-3.5 h-3.5" /> Librarian must be signed in to issue</>}
+                         </p>
+                     )}
                  </div>
 
                  {/* Scan Button */}
@@ -272,11 +349,23 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
                         onChange={(e) => setManualCode(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && processBookCode(manualCode)}
                         placeholder="0000"
-                        className="w-full bg-white dark:bg-zinc-900/50 border border-zinc-300 dark:border-zinc-800 focus:border-indigo-500 dark:focus:border-white/30 rounded-2xl py-5 text-center text-2xl font-mono tracking-[0.5em] text-zinc-900 dark:text-white outline-none transition-all placeholder:text-zinc-300 dark:placeholder:text-zinc-800 shadow-sm dark:shadow-none"
+                        className={`w-full bg-white dark:bg-zinc-900/50 border-2 rounded-2xl py-5 text-center text-2xl font-mono tracking-[0.5em] text-zinc-900 dark:text-white outline-none transition-all placeholder:text-zinc-300 dark:placeholder:text-zinc-800 shadow-sm dark:shadow-none ${
+                          codeStatus === 'valid'
+                            ? 'border-emerald-500 dark:border-emerald-500/60 focus:border-emerald-500'
+                            : codeStatus === 'invalid'
+                            ? 'border-red-500 dark:border-red-500/60 focus:border-red-500'
+                            : 'border-zinc-300 dark:border-zinc-800 focus:border-indigo-500 dark:focus:border-white/30'
+                        }`}
                     />
                     <button 
                         onClick={() => processBookCode(manualCode)}
-                        className="absolute right-2 top-2 bottom-2 px-4 bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                        className={`absolute right-2 top-2 bottom-2 px-4 rounded-xl transition-colors ${
+                          codeStatus === 'valid'
+                            ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                            : codeStatus === 'invalid'
+                            ? 'bg-red-500 hover:bg-red-600 text-white'
+                            : 'bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                        }`}
                     >
                         <Icons.ArrowRight className="w-5 h-5" />
                     </button>
