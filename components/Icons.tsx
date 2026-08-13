@@ -23,7 +23,8 @@ import {
   Linkedin,
   Mail,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  SwitchCamera
 } from 'lucide-react';
 
 export const Icons = {
@@ -50,6 +51,7 @@ export const Icons = {
   Mail,
   ExternalLink,
   ChevronRight,
+  SwitchCamera,
   Logo: (props: React.SVGProps<SVGSVGElement>) => (
     <svg 
       viewBox="0 0 100 100" 

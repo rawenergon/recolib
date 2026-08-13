@@ -1,6 +1,5 @@
-
 import React, { useEffect, useRef, useState } from 'react';
-import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode';
+import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { Icons } from './Icons';
 
 interface ScannerProps {
@@ -10,41 +9,62 @@ interface ScannerProps {
 
 const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
   const [error, setError] = useState<string | null>(null);
-  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  const [usingBackCamera, setUsingBackCamera] = useState(true);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
 
   useEffect(() => {
     const config = {
       fps: 10,
       qrbox: { width: 250, height: 250 },
-      aspectRatio: 1.0,
-      formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ]
+      formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ],
+      verbose: false
     };
 
     try {
-      scannerRef.current = new Html5QrcodeScanner(
-        "reader",
-        config,
-        false
-      );
+      scannerRef.current = new Html5Qrcode("reader", config);
 
-      scannerRef.current.render(
-        (decodedText) => {
-          onScan(decodedText);
-        },
-        (errorMessage) => {
+      const startCamera = async (isBack: boolean) => {
+        const facingMode = isBack ? 'environment' : 'user';
+        try {
+          if (scannerRef.current) {
+            await scannerRef.current.stop();
+            await scannerRef.current.clear();
+          }
+          scannerRef.current = new Html5Qrcode("reader", config);
+          setError(null);
+          await scannerRef.current.start(
+            { facingMode },
+            config,
+            (decodedText) => {
+              onScan(decodedText);
+            },
+            () => {}
+          );
+        } catch (e: any) {
+          setError(e?.name === 'NotFoundException'
+            ? "No camera found. Use the manual code entry instead."
+            : "Camera permission denied or not available.");
         }
-      );
+      };
+
+      startCamera(usingBackCamera);
     } catch (e) {
       setError("Camera permission denied or not available.");
     }
 
     return () => {
       if (scannerRef.current) {
-        scannerRef.current.clear().catch(console.error);
+        scannerRef.current.stop()
+          .catch(() => {})
+          .finally(() => scannerRef.current!.clear().catch(() => {}));
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [usingBackCamera]);
+
+  const handleSwitchCamera = () => {
+    setUsingBackCamera(prev => !prev);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 dark:bg-black/95 backdrop-blur-md p-4 animate-in fade-in duration-300">
@@ -60,7 +80,14 @@ const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
           <h2 className="text-xl font-bold mb-6 text-center text-zinc-900 dark:text-white tracking-wide">SCAN BOOK QR</h2>
           <div id="reader" className="overflow-hidden rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-black"></div>
           {error && <p className="text-red-500 text-center mt-4 text-sm">{error}</p>}
-          <p className="text-center text-xs text-zinc-500 mt-6 uppercase tracking-widest">
+          <button 
+            onClick={handleSwitchCamera}
+            className="mt-6 w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 hover:border-indigo-500/50 text-zinc-700 dark:text-zinc-300 text-xs font-bold uppercase tracking-widest transition-colors"
+          >
+            <Icons.SwitchCamera className="w-4 h-4 text-indigo-500" />
+            {usingBackCamera ? 'Switch to Front Camera' : 'Switch to Back Camera'}
+          </button>
+          <p className="text-center text-xs text-zinc-500 mt-4 uppercase tracking-widest">
             Align QR code within the frame
           </p>
         </div>
