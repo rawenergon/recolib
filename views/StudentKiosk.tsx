@@ -82,6 +82,18 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
 
   // --- Logic ---
 
+  // Ask for camera permission inside the button tap (user gesture) so the
+  // browser shows the prompt once and remembers the grant for this origin.
+  // The track is released immediately; the scanner reuses the granted permission.
+  const warmUpCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      stream.getTracks().forEach((t) => t.stop());
+    } catch {
+      // Scanner shows its own permission/error handling
+    }
+  };
+
   const handleFlowSelection = (flow: 'issue' | 'return') => {
     setMode(flow === 'issue' ? 'issue_flow' : 'return_flow');
     setManualCode('');
@@ -323,7 +335,10 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
 
                  {/* Scan Button */}
                  <button 
-                    onClick={() => setShowScanner(true)}
+                    onClick={() => {
+                        setShowScanner(true);
+                        warmUpCamera();
+                    }}
                     className={`w-full py-6 rounded-2xl border flex items-center justify-center gap-4 transition-all hover:scale-[1.02] active:scale-[0.98] mb-8 shadow-xl hover:shadow-2xl ${
                         mode === 'issue_flow' 
                         ? 'bg-indigo-600 border-indigo-500 hover:bg-indigo-500 text-white' 

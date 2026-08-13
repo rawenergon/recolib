@@ -43,7 +43,7 @@ const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
         } catch (e: any) {
           setError(e?.name === 'NotFoundException'
             ? "No camera found. Use the manual code entry instead."
-            : "Camera permission denied or not available.");
+            : "Camera access is off. Tap Allow once when asked, or open this page in Chrome/Safari browser (not an in-app browser like WhatsApp or Instagram).");
         }
       };
 
