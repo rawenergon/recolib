@@ -113,10 +113,10 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
             Documentation.
           </h1>
           <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 leading-relaxed font-light max-w-2xl">
-            Welcome to the comprehensive guide for the <span className="text-zinc-900 dark:text-white font-medium">RECO ECOSYSTEM</span>. A minimal, next-generation library management solution designed for seamless asset tracking via QR integration.
+            Welcome to the comprehensive guide for the <span className="text-zinc-900 dark:text-white font-medium">RECO ECOSYSTEM</span>. A minimal, next-generation library management solution designed for seamless asset tracking via ISBN integration.
           </p>
           <div className="flex flex-wrap gap-2 mt-8">
-            {['Version 2.1', 'Stable Release', 'QR Powered', 'Supabase Backed', 'Open Source'].map((badge) => (
+            {['Version 2.1', 'Stable Release', 'ISBN Powered', 'Supabase Backed', 'Open Source'].map((badge) => (
               <span key={badge} className="px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
                 {badge}
               </span>
@@ -138,7 +138,7 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
               <h3 className="text-lg font-bold mb-2">Student Kiosk</h3>
               <p className="text-sm text-zinc-500 font-mono">Public Facing Interface</p>
               <ul className="mt-4 space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
-                <li className="flex items-center gap-2"><Icons.CheckCircle className="w-3 h-3 text-emerald-500"/> Instant QR Code Scanning</li>
+                <li className="flex items-center gap-2"><Icons.CheckCircle className="w-3 h-3 text-emerald-500"/> Instant ISBN Barcode Scanning</li>
                 <li className="flex items-center gap-2"><Icons.CheckCircle className="w-3 h-3 text-emerald-500"/> Real-time Availability Check</li>
                 <li className="flex items-center gap-2"><Icons.CheckCircle className="w-3 h-3 text-emerald-500"/> Secure Student Authentication</li>
                 <li className="flex items-center gap-2"><Icons.CheckCircle className="w-3 h-3 text-emerald-500"/> Supervised Issue &amp; Return Flows</li>
@@ -162,7 +162,7 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
             <div className="flex flex-wrap items-center gap-3 text-[10px] font-bold uppercase tracking-wider font-mono">
               <span className="px-3 py-2 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-500/20">Student Kiosk</span>
               <Icons.ArrowRight className="w-4 h-4 text-zinc-400" />
-              <span className="px-3 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/10">QR Scan / Code Entry</span>
+              <span className="px-3 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/10">ISBN Scan / Manual Entry</span>
               <Icons.ArrowRight className="w-4 h-4 text-zinc-400" />
               <span className="px-3 py-2 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">Supabase Database</span>
               <Icons.ArrowRight className="w-4 h-4 text-zinc-400" />
@@ -184,7 +184,7 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
             {[
               { name: 'Frontend', items: ['React 19', 'TypeScript', 'Vite 6', 'Tailwind CSS'] },
               { name: 'Backend', items: ['Supabase', 'PostgreSQL 17', 'Row-Level Security', 'Supabase Auth'] },
-              { name: 'QR & Icons', items: ['html5-qrcode', 'qrcode.react', 'lucide-react'] },
+              { name: 'ISBN & Icons', items: ['html5-qrcode', 'qrcode.react', 'lucide-react'] },
             ].map((cat) => (
               <div key={cat.name} className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
                 <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-4 font-mono">{cat.name}</h3>
@@ -212,10 +212,10 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
             <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
               <h3 className="text-lg font-bold mb-3 font-mono">01 // Adding Resources</h3>
               <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-4">
-                Admins can add books or assets directly from the Directory. When adding a book, specifying a <strong>Category</strong> (e.g., COMIC, MATH) automatically creates or assigns it to a folder. Each asset requires a unique 4-digit code.
+                Admins can add books or assets directly from the Directory. When adding a book, specifying a <strong>Category</strong> (e.g., COMIC, MATH) automatically creates or assigns it to a folder. Each new addition requires a valid <strong>ISBN</strong> (barcoded or typed manually).
               </p>
               <div className="p-4 bg-indigo-50/50 dark:bg-indigo-500/5 rounded-xl border border-indigo-100 dark:border-indigo-500/20 font-mono text-xs text-indigo-600 dark:text-indigo-400">
-                <span className="font-bold">Tip:</span> Use the "Get QR" button on any book card to generate and download a printable QR code for physical labeling.
+                <span className="font-bold">Tip:</span> Books carry a printable ISBN on their physical copy &mdash; students scan it directly from the kiosk, no extra labels needed.
               </div>
             </div>
 
@@ -254,11 +254,11 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border-l-2 border-indigo-500 border border-zinc-200 dark:border-white/5 border-l-indigo-500">
               <h4 className="font-bold text-zinc-900 dark:text-white mb-2">Issuing</h4>
-              <p className="text-sm text-zinc-500 mt-1 leading-relaxed">Select "Issue", scan the book QR (or type the 4-digit code). The button turns <span className="text-emerald-500 font-bold">green</span> when the code is valid. If it's your first time, enter Name/Email/Phone. Issuing requires a librarian to be signed in.</p>
+              <p className="text-sm text-zinc-500 mt-1 leading-relaxed">Select "Issue", scan the book ISBN barcode (or type the ISBN). The button turns <span className="text-emerald-500 font-bold">green</span> when the ISBN is valid. If it's your first time, enter Name/Email/Phone. Issuing requires a librarian to be signed in.</p>
             </div>
             <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border-l-2 border-emerald-500 border border-zinc-200 dark:border-white/5 border-l-emerald-500">
               <h4 className="font-bold text-zinc-900 dark:text-white mb-2">Returning</h4>
-              <p className="text-sm text-zinc-500 mt-1 leading-relaxed">Select "Return", scan the book QR (or type the 4-digit code). The system logs the return timestamp and notifies the admin for verification.</p>
+              <p className="text-sm text-zinc-500 mt-1 leading-relaxed">Select "Return", scan the book ISBN barcode (or type the ISBN). The system logs the return timestamp and notifies the admin for verification.</p>
             </div>
           </div>
         </section>
@@ -301,7 +301,7 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
               <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-violet-600 dark:text-violet-400 font-mono mb-1">Lead Developer</p>
               <h3 className="text-3xl font-bold text-zinc-900 dark:text-white tracking-tight mb-2">Aditya Raj</h3>
               <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
-                Designer and developer of the RECO Ecosystem. Responsible for system architecture, QR integration, database design, security policies, and the full user experience.
+                Designer and developer of the RECO Ecosystem. Responsible for system architecture, ISBN integration, database design, security policies, and the full user experience.
               </p>
               <div className="flex flex-wrap gap-3 mt-5 justify-center sm:justify-start">
                 <span className="px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-900 border border-violet-200 dark:border-violet-500/20 text-[10px] font-bold uppercase tracking-widest text-violet-600 dark:text-violet-400">Product Design</span>

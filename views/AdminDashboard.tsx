@@ -1016,8 +1016,8 @@ const AdminDashboard: React.FC<{ onLogout: () => void; onExit: () => void }> = (
 
       {/* BOOK DETAILS MODAL */}
       {selectedBookDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
-            <div className="bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/10 rounded-3xl w-full max-w-lg p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div onClick={() => setSelectedBookDetail(null)} className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
+            <div onClick={(e) => e.stopPropagation()} className="bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/10 rounded-3xl w-full max-w-lg p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
                  <button onClick={() => setSelectedBookDetail(null)} className="absolute top-6 right-6 text-zinc-400 hover:text-zinc-900 dark:text-zinc-600 dark:hover:text-white transition-colors">
                     <Icons.X className="w-5 h-5" />
                 </button>
@@ -1186,8 +1186,8 @@ const AdminDashboard: React.FC<{ onLogout: () => void; onExit: () => void }> = (
 
       {/* USER PROFILE MODAL */}
       {selectedUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
-            <div className="bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/10 rounded-3xl w-full max-w-lg p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div onClick={() => setSelectedUser(null)} className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
+            <div onClick={(e) => e.stopPropagation()} className="bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/10 rounded-3xl w-full max-w-lg p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
                  <button onClick={() => setSelectedUser(null)} className="absolute top-6 right-6 text-zinc-400 hover:text-zinc-900 dark:text-zinc-600 dark:hover:text-white transition-colors">
                     <Icons.X className="w-5 h-5" />
                 </button>

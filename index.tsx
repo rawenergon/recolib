@@ -2,6 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
+const redirect = sessionStorage.getItem('redirect');
+if (redirect) {
+  sessionStorage.removeItem('redirect');
+  history.replaceState(null, '', redirect);
+}
+
 const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error("Could not find root element to mount to");

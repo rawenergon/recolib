@@ -52,9 +52,10 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
 
   // Debounced live code validation for the manual-entry button
   useEffect(() => {
-    const code = manualCode.trim();
+    const code = manualCode.trim().replace(/[-\s]/g, '');
 
-    if (code.length < 3 || code.length > 17 || mode === 'auth' || mode === 'result' || mode === 'processing') {
+    const isIsbn = /^\d{9}[\dX]$/.test(code) || /^\d{13}$/.test(code);
+    if (!isIsbn || mode === 'auth' || mode === 'result' || mode === 'processing') {
       setCodeStatus('idle');
       return;
     }
@@ -107,18 +108,19 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
   };
 
   const processBookCode = async (code: string) => {
-    if (!code || !code.trim()) return;
+    const isbn = code.trim().replace(/[-\s]/g, '');
+    if (!isbn) return;
     
     setShowScanner(false);
     setLoading(true);
     setMode('processing');
 
     try {
-      const book = await getBookByCode(code);
+      const book = await getBookByCode(isbn);
       
       if (!book) {
         setMode('result');
-        setMessage({ title: 'ASSET NOT FOUND', text: `ID ${code} does not exist in the ecosystem.`, type: 'error' });
+        setMessage({ title: 'ASSET NOT FOUND', text: `ISBN ${isbn} does not exist in the ecosystem.`, type: 'error' });
         return;
       }
 
@@ -351,7 +353,7 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
 
                  <div className="flex items-center w-full gap-4 mb-8">
                      <div className="h-px bg-zinc-200 dark:bg-zinc-800 flex-1"></div>
-                     <span className="text-[10px] text-zinc-500 dark:text-zinc-600 font-mono uppercase">Or Enter Manually</span>
+                     <span className="text-[10px] text-zinc-500 dark:text-zinc-600 font-mono uppercase">Or Enter ISBN Manually</span>
                      <div className="h-px bg-zinc-200 dark:bg-zinc-800 flex-1"></div>
                  </div>
 
@@ -363,8 +365,8 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
                         maxLength={17}
                         onChange={(e) => setManualCode(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && processBookCode(manualCode)}
-                        placeholder="0000 or ISBN"
-                        className={`w-full bg-white dark:bg-zinc-900/50 border-2 rounded-2xl py-5 text-center text-2xl font-mono tracking-[0.5em] text-zinc-900 dark:text-white outline-none transition-all placeholder:text-zinc-300 dark:placeholder:text-zinc-800 shadow-sm dark:shadow-none ${
+                        placeholder="ISBN"
+                        className={`w-full bg-white dark:bg-zinc-900/50 border-2 rounded-2xl py-5 text-center text-xl font-mono tracking-[0.3em] text-zinc-900 dark:text-white outline-none transition-all placeholder:text-zinc-300 dark:placeholder:text-zinc-800 shadow-sm dark:shadow-none ${
                           codeStatus === 'valid'
                             ? 'border-emerald-500 dark:border-emerald-500/60 focus:border-emerald-500'
                             : codeStatus === 'invalid'
@@ -382,9 +384,10 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
                             : 'bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
                         }`}
                     >
-                        <Icons.ArrowRight className="w-5 h-5" />
-                    </button>
-                 </div>
+                         <Icons.ArrowRight className="w-5 h-5" />
+                     </button>
+                  </div>
+                  <p className="text-xs text-zinc-400 dark:text-zinc-600 font-mono mt-3 text-center">10 or 13 digit ISBN</p>
              </div>
         )}
 

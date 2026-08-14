@@ -43,7 +43,6 @@ const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
 
         const scanner = new Html5Qrcode("reader", {
           formatsToSupport: [
-            Html5QrcodeSupportedFormats.QR_CODE,
             Html5QrcodeSupportedFormats.EAN_13,
             Html5QrcodeSupportedFormats.EAN_8,
             Html5QrcodeSupportedFormats.CODE_128,
@@ -106,7 +105,7 @@ const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
         </button>
         
         <div className="p-8 pt-10">
-          <h2 className="text-xl font-bold mb-6 text-center text-zinc-900 dark:text-white tracking-wide">SCAN BOOK QR / ISBN</h2>
+          <h2 className="text-xl font-bold mb-6 text-center text-zinc-900 dark:text-white tracking-wide">SCAN ISBN BARCODE</h2>
           <div id="reader" className="overflow-hidden rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-black"></div>
           {error && <p className="text-red-500 text-center mt-4 text-sm">{error}</p>}
           {hasFrontCamera && (
@@ -119,7 +118,7 @@ const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
             </button>
           )}
           <p className="text-center text-xs text-zinc-500 mt-4 uppercase tracking-widest">
-            Align QR code or ISBN barcode within the frame
+            Align the ISBN barcode within the frame
           </p>
         </div>
       </div>
