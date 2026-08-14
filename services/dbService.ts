@@ -3,10 +3,15 @@ import { supabase } from './supabaseClient';
 import { Book, Student, Transaction } from '../types';
 
 // Admin: Add Book
-export const addBook = async (title: string, category: string, unique_code: string) => {
+export const addBook = async (
+  title: string,
+  category: string,
+  isbn: string,
+  extra: { author?: string | null; publisher?: string | null; published?: string | null; pages?: number | null; binding?: string | null } = {}
+) => {
   const { data, error } = await supabase
     .from('books')
-    .insert([{ title, category, unique_code, status: 'AVAILABLE' }])
+    .insert([{ title, category, isbn, status: 'AVAILABLE', ...extra }])
     .select()
     .single();
   
@@ -25,6 +30,53 @@ export const getBooks = async () => {
   return data as Book[];
 };
 
+// Admin: Get All Registered Students (Users)
+export const getStudents = async () => {
+  const { data, error } = await supabase
+    .from('students')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (error) throw error;
+  return data as Student[];
+};
+
+// Admin: Update Student Info
+export const updateStudent = async (id: number, info: { student_id: string; name: string; email: string; phone: string }) => {
+  const { error } = await supabase
+    .from('students')
+    .update(info)
+    .eq('id', id);
+  
+  if (error) throw error;
+  return true;
+};
+
+// Admin: Delete Student (transaction history is removed via FK cascade)
+export const deleteStudent = async (id: number) => {
+  const { error } = await supabase
+    .from('students')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+  return true;
+};
+
+// Admin: Paginated transaction history for one student (newest first)
+export const getUserTransactions = async (studentInternalId: number, limit: number, offset: number) => {
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('*, books(*), students(*)')
+    .eq('student_internal_id', studentInternalId)
+    .order('issue_date', { ascending: false })
+    .range(offset, offset + limit);
+
+  if (error) throw error;
+  const rows = (data || []) as Transaction[];
+  return { data: rows.slice(0, limit), hasMore: rows.length > limit };
+};
+
 // Admin: Get All Transactions (Active & History)
 export const getAllTransactions = async () => {
   const { data, error } = await supabase
@@ -36,10 +88,33 @@ export const getAllTransactions = async () => {
   return data as Transaction[];
 };
 
+// Admin: Paginated history for one book (newest first)
+export const getBookTransactions = async (bookId: number, limit: number, offset: number) => {
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('*, books(*), students(*)')
+    .eq('book_id', bookId)
+    .order('issue_date', { ascending: false })
+    .range(offset, offset + limit);
+
+  if (error) throw error;
+  const rows = (data || []) as Transaction[];
+  return { data: rows.slice(0, limit), hasMore: rows.length > limit };
+};
+
+// Admin: Update Book Category (Folder / Tag Name)
+export const updateBookCategory = async (id: number, category: string) => {
+  const { error } = await supabase
+    .from('books')
+    .update({ category })
+    .eq('id', id);
+  
+  if (error) throw error;
+  return true;
+};
+
 // Admin: Delete Book
 export const deleteBook = async (id: number) => {
-  // 1. Manual cascade: Delete transactions referencing this book first
-  // This prevents Foreign Key errors when deleting a book with history
   const { error: txError } = await supabase
     .from('transactions')
     .delete()
@@ -78,12 +153,15 @@ export const approveReturn = async (transactionId: number, bookId: number) => {
     return true;
 }
 
-// Common: Get Book by Code
+// Common: Get Book by Code or ISBN
 export const getBookByCode = async (code: string) => {
+  const trimmed = code.trim();
+  if (!trimmed) return null;
+
   const { data, error } = await supabase
     .from('books')
     .select('*')
-    .eq('unique_code', code)
+    .or(`unique_code.eq.${trimmed},isbn.eq.${trimmed}`)
     .single();
 
   if (error) return null; // Not found

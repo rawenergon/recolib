@@ -4,7 +4,13 @@ export interface Book {
   created_at: string;
   title: string;
   category: string; // The "Folder" e.g., COMIC, MATH
-  unique_code: string; // The 4 digit admin assigned code
+  unique_code?: string | null; // Legacy 4 digit code (existing books only)
+  isbn?: string | null; // International Standard Book Number
+  author?: string | null;
+  publisher?: string | null;
+  published?: string | null;
+  pages?: number | null;
+  binding?: string | null;
   status: 'AVAILABLE' | 'ISSUED';
 }
 
@@ -28,4 +34,4 @@ export interface Transaction {
   students?: Student; // Joined
 }
 
-export type DashboardView = 'directory' | 'reviews' | 'overdue' | 'settings';
+export type DashboardView = 'directory' | 'reviews' | 'overdue' | 'users' | 'settings';

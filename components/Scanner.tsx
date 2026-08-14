@@ -14,16 +14,22 @@ const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
   const scannerRef = useRef<Html5Qrcode | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
+    let disposed = false;
 
     const startCamera = async () => {
       try {
+        // Wipe any orphaned video/canvas left by a previous scanner instance,
+        // otherwise two live camera feeds render side by side (split preview).
+        const holder = document.getElementById('reader');
+        if (holder) holder.innerHTML = '';
+
         let devices: { id: string; label: string }[] = [];
         try {
           devices = await Html5Qrcode.getCameras();
         } catch {
           // enumerateDevices can fail before permission is granted
         }
+        if (disposed) return;
 
         const back =
           devices.find((d) => /back|rear|environment/i.test(d.label)) ||
@@ -31,27 +37,34 @@ const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
           devices[devices.length - 1];
         const front = devices.find((d) => /front|user/i.test(d.label));
 
-        setHasFrontCamera(!!front);
+        if (!disposed) setHasFrontCamera(!!front);
 
         const deviceId = usingBackCamera ? back?.id : front?.id;
 
         const scanner = new Html5Qrcode("reader", {
-          formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ],
+          formatsToSupport: [
+            Html5QrcodeSupportedFormats.QR_CODE,
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.EAN_8,
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.UPC_A,
+            Html5QrcodeSupportedFormats.UPC_E
+          ],
           verbose: false
         });
         scannerRef.current = scanner;
-        setError(null);
+        if (!disposed) setError(null);
 
         await scanner.start(
           deviceId || { facingMode: usingBackCamera ? 'environment' : 'user' },
-          { fps: 10, qrbox: { width: 250, height: 250 } },
+          { fps: 10, qrbox: { width: 320, height: 320 } },
           (decodedText) => {
-            if (!cancelled) onScan(decodedText);
+            if (!disposed) onScan(decodedText);
           },
           () => {}
         );
       } catch (e: any) {
-        if (cancelled) return;
+        if (disposed) return;
         const msg = String(e?.message || e || '');
         if (/NotFoundError|no camera|could not get a camera/i.test(msg)) {
           setError("No camera found. Use the manual code entry instead.");
@@ -68,7 +81,7 @@ const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
     startCamera();
 
     return () => {
-      cancelled = true;
+      disposed = true;
       const scanner = scannerRef.current;
       scannerRef.current = null;
       if (scanner) {
@@ -84,7 +97,7 @@ const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 dark:bg-black/95 backdrop-blur-md p-4 animate-in fade-in duration-300">
-      <div className="w-full max-w-md bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-2xl relative">
+      <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-2xl relative">
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 z-10 p-2 bg-black/50 text-white rounded-full hover:bg-red-500/80 transition-colors"
@@ -92,8 +105,8 @@ const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
           <Icons.X className="w-5 h-5" />
         </button>
         
-        <div className="p-6 pt-10">
-          <h2 className="text-xl font-bold mb-6 text-center text-zinc-900 dark:text-white tracking-wide">SCAN BOOK QR</h2>
+        <div className="p-8 pt-10">
+          <h2 className="text-xl font-bold mb-6 text-center text-zinc-900 dark:text-white tracking-wide">SCAN BOOK QR / ISBN</h2>
           <div id="reader" className="overflow-hidden rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 bg-black"></div>
           {error && <p className="text-red-500 text-center mt-4 text-sm">{error}</p>}
           {hasFrontCamera && (
@@ -106,7 +119,7 @@ const Scanner: React.FC<ScannerProps> = ({ onScan, onClose }) => {
             </button>
           )}
           <p className="text-center text-xs text-zinc-500 mt-4 uppercase tracking-widest">
-            Align QR code within the frame
+            Align QR code or ISBN barcode within the frame
           </p>
         </div>
       </div>

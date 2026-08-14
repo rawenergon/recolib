@@ -54,7 +54,7 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
   useEffect(() => {
     const code = manualCode.trim();
 
-    if (code.length !== 4 || mode === 'auth' || mode === 'result' || mode === 'processing') {
+    if (code.length < 3 || code.length > 17 || mode === 'auth' || mode === 'result' || mode === 'processing') {
       setCodeStatus('idle');
       return;
     }
@@ -107,7 +107,7 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
   };
 
   const processBookCode = async (code: string) => {
-    if (!code || code.length !== 4) return;
+    if (!code || !code.trim()) return;
     
     setShowScanner(false);
     setLoading(true);
@@ -360,10 +360,10 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
                     <input 
                         type="text" 
                         value={manualCode}
-                        maxLength={4}
+                        maxLength={17}
                         onChange={(e) => setManualCode(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && processBookCode(manualCode)}
-                        placeholder="0000"
+                        placeholder="0000 or ISBN"
                         className={`w-full bg-white dark:bg-zinc-900/50 border-2 rounded-2xl py-5 text-center text-2xl font-mono tracking-[0.5em] text-zinc-900 dark:text-white outline-none transition-all placeholder:text-zinc-300 dark:placeholder:text-zinc-800 shadow-sm dark:shadow-none ${
                           codeStatus === 'valid'
                             ? 'border-emerald-500 dark:border-emerald-500/60 focus:border-emerald-500'
@@ -394,7 +394,7 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
                 <div className="flex justify-between items-start mb-6">
                     <div>
                         <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{scannedBook.title}</h3>
-                        <p className="text-xs text-zinc-500 font-mono mt-1 uppercase">{scannedBook.category} // {scannedBook.unique_code}</p>
+                        <p className="text-xs text-zinc-500 font-mono mt-1 uppercase">{scannedBook.category} // {scannedBook.unique_code || scannedBook.isbn || 'ISBN BOOK'}</p>
                     </div>
                     <div className="px-3 py-1 bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold rounded border border-emerald-200 dark:border-emerald-500/20">
                         AVAILABLE

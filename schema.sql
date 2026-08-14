@@ -11,7 +11,13 @@ CREATE TABLE IF NOT EXISTS books (
     created_at TIMESTAMPTZ DEFAULT NOW(),
     title TEXT NOT NULL,
     category TEXT NOT NULL DEFAULT 'GENERAL',
-    unique_code TEXT NOT NULL UNIQUE,
+    unique_code TEXT UNIQUE, -- Legacy 4 digit code (existing books only)
+    isbn TEXT, -- International Standard Book Number
+    author TEXT,
+    publisher TEXT,
+    published TEXT,
+    pages INT,
+    binding TEXT,
     status TEXT NOT NULL CHECK (status IN ('AVAILABLE', 'ISSUED')) DEFAULT 'AVAILABLE'
 );
 
@@ -37,6 +43,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 
 -- 5. Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_books_code ON books(unique_code);
+CREATE INDEX IF NOT EXISTS idx_books_isbn ON books(isbn);
 CREATE INDEX IF NOT EXISTS idx_students_external_id ON students(student_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_active ON transactions(status) WHERE status = 'ACTIVE';
 
