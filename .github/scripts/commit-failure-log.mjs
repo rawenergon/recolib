@@ -23,10 +23,10 @@ function esc(s) {
     .replace(/\n/g, '%0A');
 }
 
-const truncated = log.length > 24000 ? log.slice(-24000) : log;
-for (const line of truncated.split('\n')) {
-  console.log(`::error file=build-apk.yml,title=${name} (run ${runId})::${esc(line)}`);
-}
+const truncated = log.length > 30000 ? log.slice(-30000) : log;
+console.log(
+  `::error file=build-apk.yml,title=${name} (run ${runId})::${esc(truncated)}`
+);
 
 const header =
   `# ${name}\n` +
