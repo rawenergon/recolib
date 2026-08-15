@@ -22,11 +22,11 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
+      - name: Setup Java 21
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "17"
+          java-version: "21"
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -38,38 +38,12 @@ jobs:
         run: npm run build
 
       - name: Sync web assets to Android
-        run: |
-          set +e
-          {
-            echo "=== env ==="
-            node --version
-            npm --version
-            echo "=== files ==="
-            ls -la
-            echo "=== .bin/cap ==="
-            ls -la node_modules/.bin/ | grep -i cap || echo "no cap in .bin"
-            echo "=== gh auth status ==="
-            gh auth status 2>&1 || true
-            echo "=== npm ls capacitor ==="
-            npm ls @capacitor/cli @capacitor/core @capacitor/android || true
-            echo "=== dist exists? ==="
-            ls dist || true
-            echo "=== running: npx cap sync android ==="
-            npx cap sync android
-            rc=$?
-            echo "=== cap sync exit: $rc ==="
-          } > /tmp/sync.log 2>&1
-          node .github/scripts/commit-failure-log.mjs /tmp/sync.log "sync.log" || true
-          exit $rc
+        run: npx cap sync android
 
       - name: Build debug APK
         run: |
-          set +e
           chmod +x android/gradlew
-          ./android/gradlew -p android assembleDebug > /tmp/gradle.log 2>&1
-          rc=$?
-          node .github/scripts/commit-failure-log.mjs /tmp/gradle.log "gradle.log" || true
-          exit $rc
+          ./android/gradlew -p android assembleDebug
 
       - name: Rename APK
         run: cp android/app/build/outputs/apk/debug/app-debug.apk RECO-LIB.apk
