@@ -21,6 +21,7 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
   const sections = [
     { id: 'intro', label: 'Introduction' },
     { id: 'overview', label: 'System Overview' },
+    { id: 'how-it-works', label: 'How It Works' },
     { id: 'tech-stack', label: 'Tech Stack' },
     { id: 'admin-guide', label: 'Admin Guide' },
     { id: 'student-guide', label: 'Student Guide' },
@@ -168,6 +169,179 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
               <Icons.ArrowRight className="w-4 h-4 text-zinc-400" />
               <span className="px-3 py-2 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20">Admin Review</span>
             </div>
+          </div>
+        </section>
+
+        {/* How It Works */}
+        <section id="how-it-works" className="space-y-6 pt-10 border-t border-zinc-200 dark:border-white/5">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="p-2 rounded-lg bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400"><Icons.AlertCircle className="w-5 h-5" /></span>
+            <h2 className="text-2xl font-bold uppercase tracking-wide">How The System Works</h2>
+          </div>
+          <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            A complete walkthrough of the RECO engine &mdash; from the browser to the database, and back.
+          </p>
+
+          {/* 1. Architecture */}
+          <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+            <h3 className="text-lg font-bold mb-3 font-mono">01 // Architecture &amp; Request Path</h3>
+            <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-4">
+              RECO is a <strong>serverless single-page application</strong>. There is no custom backend &mdash; the database <em>is</em> the backend.
+            </p>
+            <div className="space-y-3 font-mono text-xs">
+              {[
+                ['1', 'The React SPA loads once; every screen (Kiosk, Admin, Docs) is a client-side route rendered from /, /admin and /docs.'],
+                ['2', 'All data calls go through supabase-js, which talks to Supabase over PostgREST (a REST layer over SQL).'],
+                ['3', 'The SQL runs in PostgreSQL 17. Row-Level Security rules decide if each query is allowed.', 'text-emerald-600 dark:text-emerald-400'],
+                ['4', 'Live book covers and ISBN metadata come from the free OpenLibrary API &mdash; not from our database.'],
+                ['5', 'No polling, no queues: every screen refetches on open, which keeps the kiosk and dashboard instantly consistent.'],
+              ].map(([num, text, color]) => (
+                <div key={num} className="flex items-start gap-3">
+                  <span className="shrink-0 w-6 h-6 rounded-lg bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-100 dark:border-cyan-500/20 flex items-center justify-center text-[10px] font-bold">{num}</span>
+                  <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed pt-0.5"><span className={`font-bold ${color || 'text-zinc-800 dark:text-zinc-200'}`}>{text}</span></p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 2. Data Model */}
+          <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+            <h3 className="text-lg font-bold mb-3 font-mono">02 // Data Model</h3>
+            <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-4">
+              Three tables drive the entire ecosystem. Every card on the dashboard is derived from these.
+            </p>
+            <div className="grid sm:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-600 dark:text-cyan-400 mb-3 font-mono">Books</p>
+                <ul className="space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400 font-mono">
+                  <li><span className="text-zinc-400">title</span> — display name</li>
+                  <li><span className="text-zinc-400">isbn</span> — primary identity</li>
+                  <li><span className="text-zinc-400">category</span> — folder/tag</li>
+                  <li><span className="text-zinc-400">unique_code</span> — legacy only</li>
+                  <li><span className="text-zinc-400">status</span> — AVAILABLE / ISSUED</li>
+                  <li><span className="text-zinc-400">author, publisher, pages…</span> — OpenLibrary</li>
+                </ul>
+              </div>
+              <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 mb-3 font-mono">Students</p>
+                <ul className="space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400 font-mono">
+                  <li><span className="text-zinc-400">student_id</span> — typed at kiosk</li>
+                  <li><span className="text-zinc-400">name / email / phone</span></li>
+                  <li><span className="text-zinc-400">created_at</span> — first-use time</li>
+                  <li className="pt-2 text-zinc-500">Auto-registered on first self-issue.</li>
+                </ul>
+              </div>
+              <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400 mb-3 font-mono">Transactions</p>
+                <ul className="space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400 font-mono">
+                  <li><span className="text-zinc-400">book_id + student_internal_id</span></li>
+                  <li><span className="text-zinc-400">issue_date</span> — auto</li>
+                  <li><span className="text-zinc-400">return_date</span> — set on return</li>
+                  <li><span className="text-zinc-400">status</span> — ACTIVE / RETURNED</li>
+                  <li className="pt-2 text-zinc-500">History is never deleted on return.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. ISBN Pipeline */}
+          <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+            <h3 className="text-lg font-bold mb-3 font-mono">03 // The ISBN Pipeline</h3>
+            <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-4">
+              The ISBN is the single identity of every asset. Three ways it enters the system:
+            </p>
+            <div className="space-y-4">
+              <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+                <p className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 font-mono">A) Camera Scan</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                  The kiosk and the admin add-book form use a camera scanner (html5-qrcode) restricted to the <strong>EAN-13, EAN-8, CODE-128, UPC-A and UPC-E</strong> barcode families &mdash; the standards ISBNs are printed in. QR codes are deliberately not decoded: RECO is ISBN-only.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+                <p className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 font-mono">B) Manual Entry</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                  The kiosk input strips dashes and spaces live, then validates against <span className="font-mono text-xs">{'^\\d{9}[\\dX]$'}</span> (ISBN-10) or <span className="font-mono text-xs">{'^\\d{13}$'}</span> (ISBN-13). The confirm button stays grey until the value is a structurally valid ISBN, green when the book exists, red when it does not.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+                <p className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 font-mono">C) Metadata Auto-Fill (Admin)</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                  While adding a book, the admin ISBN field auto-queries <span className="font-mono text-xs">openlibrary.org/isbn/&lt;isbn&gt;.json</span> and pre-fills title, author, publisher, page count and binding. Covers render from the OpenLibrary covers CDN; missing covers fall back to a generated placeholder. Lookup faults are silent &mdash; the form still allows manual entry.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+                <p className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 font-mono">D) Resolution</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                  Every scan or manual code resolves through <span className="font-mono text-xs">getBookByCode()</span>, which matches <span className="font-mono text-xs">unique_code = input OR isbn = input</span> in a single row query. Legacy books with a 4-digit code still resolve via their old code; any ISBN not in the database returns an "ASSET NOT FOUND" card.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Lifecycle */}
+          <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+            <h3 className="text-lg font-bold mb-3 font-mono">04 // Transaction Lifecycle: ISSUE &rarr; REVIEW &rarr; RETURN</h3>
+            <div className="space-y-4">
+              {[
+                { tag: 'ISSUE', bg: 'bg-indigo-50 dark:bg-indigo-500/10', color: 'text-indigo-600 dark:text-indigo-400', text: 'The kiosk is in Issue flow and a librarian session is active. A valid ISBN resolves to an AVAILABLE book, identity is confirmed (existing student_id or first-time registration of name/email/phone), then issueBook() inserts a transaction as ACTIVE with issue_date and flips the book to ISSUED. Two writes, one logical action.' },
+                { tag: 'RETURN', bg: 'bg-amber-50 dark:bg-amber-500/10', color: 'text-amber-600 dark:text-amber-400', text: 'The kiosk is in Return flow. A valid ISBN resolves to an ISSUED book. returnBook() finds its ACTIVE transaction and writes return_date — but deliberately does NOT touch status. The transaction is now in PENDING REVIEW, shown with an amber "Pending Review" label everywhere.' },
+                { tag: 'VERIFY', bg: 'bg-emerald-50 dark:bg-emerald-500/10', color: 'text-emerald-600 dark:text-emerald-400', text: 'An admin opens the Review Queue tab, checks the physical item, and clicks Approve. approveReturn() flips the transaction to RETURNED and the book back to AVAILABLE. Only now can the book be issued again — staff verify every return by design.' },
+                { tag: 'OVERDUE', bg: 'bg-rose-50 dark:bg-rose-500/10', color: 'text-rose-600 dark:text-rose-400', text: 'Any ACTIVE transaction with no return_date whose issue_date is older than 10 days appears in the Overdue Logs tab with days elapsed and full student contact details. Overdue calculations are derived live from timestamps — nothing is stored or scheduled.' },
+              ].map((step) => (
+                <div key={step.tag} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 flex gap-4">
+                  <span className={`shrink-0 h-fit px-3 py-1.5 rounded-lg ${step.bg} ${step.color} text-[10px] font-bold tracking-widest font-mono`}>{step.tag}</span>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{step.text}</p>
+                </div>
+              ))}
+            </div>
+            <div className="p-4 bg-cyan-50/50 dark:bg-cyan-500/5 rounded-xl border border-cyan-100 dark:border-cyan-500/20 font-mono text-xs text-cyan-600 dark:text-cyan-400 mt-4">
+              <span className="font-bold">Note:</span> The stat cards on the dashboard are derived in-memory from the transaction list: Books Issued = ACTIVE without return_date, Pending Returns = ACTIVE with return_date, Overdue = older than 10 days.
+            </div>
+          </div>
+
+          {/* 5. Kiosk State Machine */}
+          <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+            <h3 className="text-lg font-bold mb-3 font-mono">05 // Kiosk State Machine</h3>
+            <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] font-bold uppercase tracking-wider">
+              <span className="px-3 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/5">HOME</span>
+              <Icons.ArrowRight className="w-3 h-3 text-zinc-400" />
+              <span className="px-3 py-2 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-500/20">ISSUE / RETURN FLOW</span>
+              <Icons.ArrowRight className="w-3 h-3 text-zinc-400" />
+              <span className="px-3 py-2 rounded-lg bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">SCAN / TYPE ISBN</span>
+              <Icons.ArrowRight className="w-3 h-3 text-zinc-400" />
+              <span className="px-3 py-2 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">IDENTITY (ISSUE ONLY)</span>
+              <Icons.ArrowRight className="w-3 h-3 text-zinc-400" />
+              <span className="px-3 py-2 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20">RESULT</span>
+            </div>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mt-4">
+              The flow is gated at every step: the camera only starts after choosing Issue or Return; Issue additionally requires an <strong>active librarian session on the device</strong> (the kiosk checks the same Supabase session as the admin panel, so staff log in once per shift); an ISBN of an unavailable book is rejected before identity is even asked; Return only proceeds for books currently ISSUED.
+            </p>
+          </div>
+
+          {/* 6. Admin Surface */}
+          <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+            <h3 className="text-lg font-bold mb-3 font-mono">06 // Admin Dashboard Surface</h3>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {[
+                ['Asset Directory', 'Search across title, category, code and author. Filter by folder chips. Add books via typed or scanned ISBN with OpenLibrary auto-fill. Every card opens a detail modal: cover, metadata, current holder, contact, and paginated issue/return history with "Load More". Folders are renamed inline; deleting a book cascades its transactions first.'],
+                ['Review Queue', 'Lists PENDING REVIEW transactions (returned but unverified). Approve marks them RETURNED and releases the book back to AVAILABLE.'],
+                ['Overdue Logs', 'Live-derived view of ACTIVE transactions past 10 days, with days overdue and student details for follow-up.'],
+                ['Users', 'Every registered student with edit (ID, name, email, phone) and delete. The profile modal shows paginated transaction history; deleting a student cascades their history via foreign keys.'],
+              ].map(([title, desc]) => (
+                <div key={title} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+                  <p className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2 font-mono">{title}</p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 7. Auth */}
+          <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+            <h3 className="text-lg font-bold mb-3 font-mono">07 // Session &amp; Security Mechanics</h3>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              The admin signs in with Supabase Auth (email + password). The session token is persisted in a <strong>cookie</strong> (30-day max-age, SameSite=Lax) instead of localStorage, so the session survives page reloads and even works inside embedded mobile browsers that block localStorage. The JWT auto-refreshes inside that window. The kiosk reads the same session to enforce the librarian gate. On the database side, Row-Level Security lets the anonymous kiosk role only read books and create students/transactions, while destructive and administrative operations require an authenticated session.
+            </p>
           </div>
         </section>
 
