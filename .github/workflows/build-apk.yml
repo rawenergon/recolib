@@ -16,10 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node 20
+      - name: Setup Node 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Setup Java 17
@@ -48,6 +48,8 @@ jobs:
             ls -la
             echo "=== .bin/cap ==="
             ls -la node_modules/.bin/ | grep -i cap || echo "no cap in .bin"
+            echo "=== gh auth status ==="
+            gh auth status 2>&1 || true
             echo "=== npm ls capacitor ==="
             npm ls @capacitor/cli @capacitor/core @capacitor/android || true
             echo "=== dist exists? ==="
