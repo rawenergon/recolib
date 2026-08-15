@@ -62,7 +62,7 @@ function AdminView({ session, handleLogout }: { session: any; handleLogout: () =
                       <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 pl-1">Identity</label>
                       <input 
                           type="email" 
-                          placeholder="user@recolabs.system"
+                          placeholder="admin@recolib.system"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           className="w-full px-4 py-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 outline-none text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-700 transition-all"

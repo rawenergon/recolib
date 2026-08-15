@@ -66,7 +66,7 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
         <div className="p-8 h-full flex flex-col">
           <div className="flex items-center gap-2 mb-10 cursor-pointer" onClick={onBack}>
             <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div>
-            <span className="text-xs font-bold tracking-[0.25em] font-mono">RECO_DOCS</span>
+            <span className="text-xs font-bold tracking-[0.25em] font-mono">RECO LIB DOCS</span>
           </div>
 
           <nav className="flex-1 space-y-2">
@@ -94,7 +94,7 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
               <Icons.ArrowRight className="w-3 h-3 rotate-180" />
               Exit Docs
             </button>
-            <p className="text-[9px] font-mono text-zinc-400 dark:text-zinc-600 uppercase tracking-widest">Docs v2.1 · RECO Labs</p>
+            <p className="text-[9px] font-mono text-zinc-400 dark:text-zinc-600 uppercase tracking-widest">Docs v2.1 · RECO LIB</p>
           </div>
         </div>
       </aside>
@@ -114,7 +114,7 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
             Documentation.
           </h1>
           <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 leading-relaxed font-light max-w-2xl">
-            Welcome to the comprehensive guide for the <span className="text-zinc-900 dark:text-white font-medium">RECO ECOSYSTEM</span>. A minimal, next-generation library management solution designed for seamless asset tracking via ISBN integration.
+            Welcome to the comprehensive guide for the <span className="text-zinc-900 dark:text-white font-medium">RECO LIB</span>. A minimal, next-generation library management solution designed for seamless asset tracking via ISBN integration.
           </p>
           <div className="flex flex-wrap gap-2 mt-8">
             {['Version 2.1', 'Stable Release', 'ISBN Powered', 'Supabase Backed', 'Open Source'].map((badge) => (

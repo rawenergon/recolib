@@ -1,6 +1,6 @@
-# @RECOLABS — Next-Gen Library Ecosystem
+# RECO LIB — Next-Gen Library Ecosystem
 
-A minimal, modern **library management system** built for schools, with QR-code-based book issuing, returning, and tracking. Students interact through a touch-enabled **Kiosk**, while admins manage the ecosystem from a secure **Admin Dashboard** backed by Supabase.
+A minimal, modern **library management system** built for schools, with ISBN-barcode-based book issuing, returning, and tracking. Students interact through a touch-enabled **Kiosk**, while admins manage the ecosystem from a secure **Admin Dashboard** backed by Supabase.
 
 ![Stack](https://img.shields.io/badge/React%2019-61DAFB?logo=react&logoColor=black) ![Stack](https://img.shields.io/badge/Vite%206-646CFF?logo=vite&logoColor=white) ![Stack](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white) ![Stack](https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=black) ![Stack](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?logo=tailwindcss&logoColor=white)
 
@@ -253,4 +253,4 @@ Build output: `dist/` — upload it to your host. Remember to configure the same
 
 ## License
 
-Private / educational use — RECO LABS.
+Private / educational use — RECO LIB.

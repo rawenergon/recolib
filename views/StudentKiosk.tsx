@@ -248,7 +248,7 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
       <nav className="w-full px-8 py-8 flex items-center justify-between z-50">
         <div className="flex items-center gap-3">
             <Icons.Logo className="w-8 h-8" />
-            <span className="text-xs font-bold tracking-[0.25em] font-mono text-zinc-900 dark:text-white">RECOLABS</span>
+            <span className="text-xs font-bold tracking-[0.25em] font-mono text-zinc-900 dark:text-white">RECO LIB</span>
         </div>
         <div className="flex items-center gap-4">
           <button 
@@ -511,7 +511,7 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
       <footer className="w-full py-6 text-center z-40">
         <div className="flex items-center justify-center gap-2 opacity-30">
              <div className="w-1.5 h-1.5 bg-zinc-900 dark:bg-white rounded-full"></div>
-             <p className="text-[10px] font-bold font-mono tracking-[0.3em] text-zinc-900 dark:text-white">RECO ECOSYSTEM v2.0</p>
+             <p className="text-[10px] font-bold font-mono tracking-[0.3em] text-zinc-900 dark:text-white">RECO LIB v2.0</p>
         </div>
       </footer>
 

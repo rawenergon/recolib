@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Crawl-delay: 1
+
+# Admin-only paths are still crawlable but add no index value
+Disallow: /api/
+
+Sitemap: https://recolib.vercel.app/sitemap.xml

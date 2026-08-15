@@ -435,7 +435,7 @@ const AdminDashboard: React.FC<{ onLogout: () => void; onExit: () => void }> = (
              <div className="flex items-center gap-3 group">
                <Icons.Logo className="w-10 h-10" />
                <h1 className="text-xl md:text-2xl font-black tracking-tighter font-mono select-none flex items-center gap-1">
-                  <span className="text-zinc-900 dark:text-white">RECOLABS</span>
+                  <span className="text-zinc-900 dark:text-white">RECO LIB</span>
                   <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 dark:from-indigo-400 dark:via-violet-400 dark:to-indigo-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">_CORE</span>
                </h1>
              </div>
