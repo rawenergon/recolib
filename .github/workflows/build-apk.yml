@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   build-apk:
@@ -38,12 +39,21 @@ jobs:
         run: npm run build
 
       - name: Sync web assets to Android
-        run: npx cap sync android
+        run: |
+          set +e
+          npx cap sync android 2>&1 | tee ~/sync.log
+          rc=${PIPESTATUS[0]}
+          node .github/scripts/report-failure.mjs ~/sync.log "${{ github.run_id }}" "cap sync" || true
+          exit $rc
 
       - name: Build debug APK
         run: |
+          set +e
           chmod +x android/gradlew
-          ./android/gradlew -p android assembleDebug
+          ./android/gradlew -p android assembleDebug 2>&1 | tee ~/gradle.log
+          rc=${PIPESTATUS[0]}
+          node .github/scripts/report-failure.mjs ~/gradle.log "${{ github.run_id }}" "gradle assembleDebug" || true
+          exit $rc
 
       - name: Rename APK
         run: cp android/app/build/outputs/apk/debug/app-debug.apk RECO-LIB.apk
