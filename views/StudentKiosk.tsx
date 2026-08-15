@@ -9,11 +9,12 @@ import { Icons } from '../components/Icons';
 interface StudentKioskProps {
   onAdminClick: () => void;
   onDocsClick: () => void;
+  onUserClick: () => void;
 }
 
 type KioskMode = 'home' | 'issue_flow' | 'return_flow' | 'auth' | 'processing' | 'result';
 
-const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }) => {
+const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick, onUserClick }) => {
   // State
   const [mode, setMode] = useState<KioskMode>('home');
   const [showScanner, setShowScanner] = useState(false);
@@ -251,6 +252,12 @@ const StudentKiosk: React.FC<StudentKioskProps> = ({ onAdminClick, onDocsClick }
             <span className="text-xs font-bold tracking-[0.25em] font-mono text-zinc-900 dark:text-white">RECO LIB</span>
         </div>
         <div className="flex items-center gap-4">
+          <button 
+            onClick={onUserClick}
+            className="text-[10px] font-bold tracking-widest text-zinc-500 hover:text-zinc-900 dark:text-zinc-600 dark:hover:text-white transition-colors uppercase"
+          >
+            My History
+          </button>
           <button 
             onClick={onDocsClick}
             className="text-[10px] font-bold tracking-widest text-zinc-500 hover:text-zinc-900 dark:text-zinc-600 dark:hover:text-white transition-colors uppercase"

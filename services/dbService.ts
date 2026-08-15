@@ -192,6 +192,23 @@ export const createStudent = async (studentId: string, name: string, email: stri
   return data as Student;
 };
 
+// User Portal: Full transaction history for a student by their entered ID (newest first)
+export const getUserHistoryByStudentId = async (studentId: string, limit: number, offset: number) => {
+  const student = await getStudentById(studentId.trim());
+  if (!student) return { student: null, data: [], hasMore: false };
+
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('*, books(*), students(*)')
+    .eq('student_internal_id', student.id)
+    .order('issue_date', { ascending: false })
+    .range(offset, offset + limit);
+
+  if (error) throw error;
+  const rows = (data || []) as Transaction[];
+  return { student, data: rows.slice(0, limit), hasMore: rows.length > limit };
+};
+
 // Transaction: Issue Book
 export const issueBook = async (bookId: number, studentInternalId: number) => {
   // 1. Create transaction

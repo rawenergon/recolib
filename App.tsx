@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'r
 import AdminDashboard from './views/AdminDashboard';
 import StudentKiosk from './views/StudentKiosk';
 import DocsPage from './views/DocsPage';
+import UserPortal from './views/UserPortal';
 import { supabase } from './services/supabaseClient';
 import { Icons } from './components/Icons';
 
@@ -112,12 +113,17 @@ function AdminView({ session, handleLogout }: { session: any; handleLogout: () =
 
 function KioskView() {
   const navigate = useNavigate();
-  return <StudentKiosk onAdminClick={() => navigate('/admin')} onDocsClick={() => navigate('/docs')} />;
+  return <StudentKiosk onAdminClick={() => navigate('/admin')} onDocsClick={() => navigate('/docs')} onUserClick={() => navigate('/user')} />;
 }
 
 function DocsView() {
   const navigate = useNavigate();
   return <DocsPage onBack={() => navigate('/')} />;
+}
+
+function UserPortalView() {
+  const navigate = useNavigate();
+  return <UserPortal onBack={() => navigate('/')} />;
 }
 
 function App() {
@@ -147,6 +153,7 @@ function App() {
         <Route path="/" element={<KioskView />} />
         <Route path="/admin" element={<AdminView session={session} handleLogout={handleLogout} />} />
         <Route path="/docs" element={<DocsView />} />
+        <Route path="/user" element={<UserPortalView />} />
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

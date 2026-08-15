@@ -26,6 +26,7 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
     { id: 'admin-guide', label: 'Admin Guide' },
     { id: 'student-guide', label: 'Student Guide' },
     { id: 'security', label: 'Security Model' },
+    { id: 'android', label: 'Android App' },
     { id: 'developer', label: 'Developer' },
   ];
 
@@ -434,6 +435,12 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
               <h4 className="font-bold text-zinc-900 dark:text-white mb-2">Returning</h4>
               <p className="text-sm text-zinc-500 mt-1 leading-relaxed">Select "Return", scan the book ISBN barcode (or type the ISBN). The system logs the return timestamp and notifies the admin for verification.</p>
             </div>
+            <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border-l-2 border-cyan-500 border border-zinc-200 dark:border-white/5 border-l-cyan-500 sm:col-span-2">
+              <h4 className="font-bold text-zinc-900 dark:text-white mb-2">My History (Student Portal)</h4>
+              <p className="text-sm text-zinc-500 mt-1 leading-relaxed">
+                Tap <span className="font-mono">My History</span> in the top bar (or open <span className="font-mono">/user</span> on any device). Enter the exact student ID you use at the kiosk and the portal shows your full borrowing record: every book, issue date, return date, and a live status chip &mdash; <span className="text-indigo-500 font-bold">ISSUED</span>, <span className="text-amber-500 font-bold">PENDING REVIEW</span> or <span className="text-emerald-500 font-bold">RETURNED</span> &mdash; plus a summary of active/pending/returned counts. No login needed.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -456,6 +463,65 @@ const DocsPage: React.FC<DocsPageProps> = ({ onBack }) => {
                 Issuing is blocked unless an admin session is active on the device. This ensures no student can issue an asset remotely or outside library premises.
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* Android App */}
+        <section id="android" className="space-y-6 pt-10 border-t border-zinc-200 dark:border-white/5">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"><Icons.Download className="w-5 h-5" /></span>
+            <h2 className="text-2xl font-bold uppercase tracking-wide">Android App (.apk)</h2>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+            <h3 className="text-lg font-bold mb-3 font-mono">01 // What It Is</h3>
+            <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">
+              RECO LIB is a progressive web app wrapped into a native Android package (Trusted Web Activity / WebView). Everything the browser version does works inside the APK &mdash; ISBN barcode scanning, the student kiosk, the admin dashboard, and the student history portal. No account needed to install.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+            <h3 className="text-lg font-bold mb-3 font-mono">02 // Download</h3>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+              The latest signed APK is always attached to the newest GitHub Release. The link below always points to the newest build.
+            </p>
+            <a
+              href="https://github.com/rawenergon/recolib/releases/latest/download/RECO-LIB.apk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-widest transition-colors shadow-lg shadow-emerald-600/20"
+            >
+              <Icons.Download className="w-4 h-4" /> RECO-LIB.apk
+            </a>
+            <p className="text-[10px] font-mono text-zinc-400 dark:text-zinc-600 mt-3">Fallback: github.com/rawenergon/recolib &rarr; Releases</p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+            <h3 className="text-lg font-bold mb-3 font-mono">03 // Install On Your Phone</h3>
+            <div className="space-y-3 font-mono text-xs">
+              {[
+                '1. Open the download link above on the Android phone (Chrome or the file browser).',
+                '2. If prompted "This type of file can harm your device", tap the ⠇ menu and choose "Keep" / "Download anyway".',
+                '3. Tap the downloaded RECO-LIB.apk (check Notifications or the Downloads folder).',
+                '4. Allow "Install unknown apps" for that source when Android asks (Settings → Security → Unknown sources).',
+                '5. Tap Install, then Open. Grant camera access when the scanner starts — book scanning works exactly like the web kiosk.',
+              ].map((step) => (
+                <div key={step} className="flex items-start gap-3">
+                  <span className="shrink-0 w-6 h-6 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-500/20 flex items-center justify-center text-[10px] font-bold">{step.slice(0, 1)}</span>
+                  <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed pt-0.5">{step.slice(2)}</p>
+                </div>
+              ))}
+            </div>
+            <div className="p-4 bg-amber-50/50 dark:bg-amber-500/5 rounded-xl border border-amber-100 dark:border-amber-500/20 font-mono text-xs text-amber-600 dark:text-amber-400 mt-4">
+              <span className="font-bold">Note:</span> Sideloading warning screens are normal for apps outside the Play Store. RECO LIB is open source &mdash; the APK is built automatically from this repository on every version release.
+            </div>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5">
+            <h3 className="text-lg font-bold mb-3 font-mono">04 // For Librarians &amp; Admins</h3>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              Install the same APK on the staff phone or the kiosk tablet. The <strong>Admin Panel</strong> button opens the sign-in gate (same Supabase credentials as the web admin) and the whole dashboard &mdash; directory, review queue, overdue logs and users &mdash; works offline-friendly thanks to the built-in service worker. Updating is free: new builds are published as Releases; the download link above always serves the newest APK.
+            </p>
           </div>
         </section>
 
