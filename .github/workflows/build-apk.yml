@@ -40,18 +40,33 @@ jobs:
       - name: Sync web assets to Android
         run: |
           set +e
-          npx cap sync android 2>&1 | tee /tmp/sync.log
-          rc=${PIPESTATUS[0]}
-          if [ $rc -ne 0 ]; then node .github/scripts/commit-failure-log.mjs /tmp/sync.log "sync.log"; fi
+          {
+            echo "=== env ==="
+            node --version
+            npm --version
+            echo "=== files ==="
+            ls -la
+            echo "=== .bin/cap ==="
+            ls -la node_modules/.bin/ | grep -i cap || echo "no cap in .bin"
+            echo "=== npm ls capacitor ==="
+            npm ls @capacitor/cli @capacitor/core @capacitor/android || true
+            echo "=== dist exists? ==="
+            ls dist || true
+            echo "=== running: npx cap sync android ==="
+            npx cap sync android
+            rc=$?
+            echo "=== cap sync exit: $rc ==="
+          } > /tmp/sync.log 2>&1
+          node .github/scripts/commit-failure-log.mjs /tmp/sync.log "sync.log" || true
           exit $rc
 
       - name: Build debug APK
         run: |
           set +e
           chmod +x android/gradlew
-          ./android/gradlew -p android assembleDebug 2>&1 | tee /tmp/gradle.log
-          rc=${PIPESTATUS[0]}
-          if [ $rc -ne 0 ]; then node .github/scripts/commit-failure-log.mjs /tmp/gradle.log "gradle.log"; fi
+          ./android/gradlew -p android assembleDebug > /tmp/gradle.log 2>&1
+          rc=$?
+          node .github/scripts/commit-failure-log.mjs /tmp/gradle.log "gradle.log" || true
           exit $rc
 
       - name: Rename APK
