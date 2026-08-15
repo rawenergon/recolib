@@ -30,3 +30,8 @@ RECO-LIB.apk
 *.sln
 *.sw?
 debug/
+
+# All Android build outputs
+android/build/
+android/**/build/
+android/.gradle/
