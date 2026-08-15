@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>RECO LIB | Next-Gen Library Ecosystem</title>
+    <meta name="title" content="RECO LIB | Next-Gen Library Ecosystem" />
+    <meta name="description" content="A minimal, modern library management system with ISBN barcode integration. RECO LIB streamlines book issuing, returning, and tracking for schools and institutions." />
+    <meta name="keywords" content="library management system, ISBN library software, student library app, RECO LIB, book tracking, school software, barcode scanner" />
+    <meta name="author" content="RECO LIB" />
+    <!-- Dynamic Theme Color -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#050505" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://recolib.vercel.app/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="RECO LIB" />
+    <meta property="og:url" content="https://recolib.vercel.app/" />
+    <meta property="og:title" content="RECO LIB | Next-Gen Library Ecosystem" />
+    <meta property="og:description" content="ISBN-powered library management. Issue, return, and track resources in real-time." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=1200&auto=format&fit=crop" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://recolib.vercel.app/" />
+    <meta property="twitter:title" content="RECO LIB | Next-Gen Library Ecosystem" />
+    <meta property="twitter:description" content="ISBN-powered library management. Issue, return, and track resources in real-time." />
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=1200&auto=format&fit=crop" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="RECO LIB" />
+
+    <!-- JSON-LD Structured Data for Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "RECO LIB",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "url": "https://recolib.vercel.app/",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "A modern library management system ensuring efficient book tracking via ISBN barcodes."
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'media', // Uses system preference
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Outfit', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+              background: "var(--background)",
+              foreground: "var(--foreground)",
+              primary: "var(--primary)",
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Add Tailwind Animate Plugin for smooth UI transitions -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+      
+      @media (prefers-color-scheme: light) {
+        body {
+          background-color: #f8fafc;
+          color: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #050505;
+          color: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #475569;
+        }
+      }
+      
+      body {
+        font-family: 'Outfit', sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      /* Custom Scrollbar */
+      
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+      }
+      
+      /* Animation Utilities (Polyfill for tailwindcss-animate in browser CDN) */
+      
+      @keyframes enter {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      
+      @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      .animate-in {
+        animation-fill-mode: forwards;
+        animation-duration: 0.5s;
+        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      
+      .fade-in {
+        animation-name: fadeIn;
+      }
+      
+      .zoom-in-95 {
+        animation-name: enter;
+      }
+      
+      .slide-in-from-bottom-2 {
+        animation-name: slideIn;
+      }
+      
+      .slide-in-from-bottom-4 {
+        animation-name: slideIn;
+      }
+      
+      .slide-in-from-bottom-8 {
+        animation-name: slideIn;
+      }
+    </style>
+  <script type="module" crossorigin src="/assets/index-C9l0yc6h.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-D7GtmRcK.css">
+</head>
+  <body>
+    <div id="root"></div>
+</body>
+</html>

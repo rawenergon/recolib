@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">RECO LIB</string>
+    <string name="title_activity_main">RECO LIB</string>
+    <string name="package_name">in.recolib.app</string>
+    <string name="custom_url_scheme">in.recolib.app</string>
+</resources>

@@ -37,12 +37,8 @@ jobs:
       - name: Build web assets
         run: npm run build
 
-      - name: Add Android platform
-        run: npx cap add android
-
-      - name: Grant camera and internet permissions
-        run: |
-          sed -i 's|<uses-permission android:name="android.permission.INTERNET" />|<uses-permission android:name="android.permission.INTERNET" /><uses-permission android:name="android.permission.CAMERA" />|' android/app/src/main/AndroidManifest.xml
+      - name: Sync web assets to Android
+        run: npx cap sync android
 
       - name: Build debug APK
         run: |
