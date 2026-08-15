@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: write
-  issues: write
 
 jobs:
   build-apk:
@@ -41,18 +40,18 @@ jobs:
       - name: Sync web assets to Android
         run: |
           set +e
-          npx cap sync android 2>&1 | tee ~/sync.log
+          npx cap sync android 2>&1 | tee /tmp/sync.log
           rc=${PIPESTATUS[0]}
-          node .github/scripts/report-failure.mjs ~/sync.log "${{ github.run_id }}" "cap sync" || true
+          if [ $rc -ne 0 ]; then node .github/scripts/commit-failure-log.mjs /tmp/sync.log "sync.log"; fi
           exit $rc
 
       - name: Build debug APK
         run: |
           set +e
           chmod +x android/gradlew
-          ./android/gradlew -p android assembleDebug 2>&1 | tee ~/gradle.log
+          ./android/gradlew -p android assembleDebug 2>&1 | tee /tmp/gradle.log
           rc=${PIPESTATUS[0]}
-          node .github/scripts/report-failure.mjs ~/gradle.log "${{ github.run_id }}" "gradle assembleDebug" || true
+          if [ $rc -ne 0 ]; then node .github/scripts/commit-failure-log.mjs /tmp/gradle.log "gradle.log"; fi
           exit $rc
 
       - name: Rename APK
